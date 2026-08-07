@@ -25,9 +25,50 @@ Cloning the git repository directly(gives access unreleased features and access 
 
 ___
 
-## API Reference Documentation
+## API Reference
 
-Documentation website coming soon. Meanwhile, summary for each of the method is provided.
+Full documentation website coming soon. Quick reference below to get started — namespace is `TripleA.Utils.*`.
+
+### Extensions (`TripleA.Utils.Extensions`)
+
+Import with `using TripleA.Utils.Extensions;`, then call as normal extension methods.
+
+| Type | Examples |
+|---|---|
+| `string` | `str.IsBlank()`, `str.OrEmpty()`, `str.Shorten(20)`, `str.Slice(2, -1)` |
+| `int` / `float` / `double` | `5.IsEven()`, `a.AtLeast(0)`, `a.AtMost(100)`, `part.PercentageOf(whole)` |
+| `Vector2` / `Vector3` | `v.With(x: 1)`, `v.Add(y: 2)`, `v.Clamp(0, 1)`, `v.Round()`, `v3.ToVector2IgnoreZ()` |
+| `Color` | `color.WithAlpha(0.5f)`, `color.With(r: 1)` |
+| `GameObject` | `go.GetOrAddComponent<T>()`, `go.DestroyChildren()`, `go.HideInHierarchy()` |
+| `Transform` | `t.Children()`, `t.Reset()`, `t.InRangeOf(target, 10f)`, `t.DestroyChildren()` |
+| `List<T>` / `IList<T>` | `list.Shuffle()`, `list.Swap(0, 1)`, `list.RefreshWith(newItems)` |
+| `IEnumerable` | `enumerable.CountEnumerable()` |
+
+Static (non-extension) helpers: `MathExtensions.Approximately`, `MathfExtension.Max/Min`, `Vector2Math`/`Vector3Math` (dot/angle/projection helpers), `PrefabExtensions.IsUninstantiatedPrefab`.
+
+### Observables (`TripleA.Utils.Observables`)
+
+```csharp
+using TripleA.Utils.Observables.Primaries;
+
+ObservableInt health = new(100);
+health.AddListener(newValue => Debug.Log($"Health changed to {newValue}"));
+health.Value = 80; // fires the listener
+```
+
+Also available: `ObservableFloat`, `ObservableBool`, and generic `Observable<T>` for any serializable type. `TripleA.Utils.Observables.Collections` has `ObservableStack<T>` / `ObservableQueue<T>`, which raise `CollectionChanged` on push/pop/enqueue/dequeue.
+
+### Singletons (`TripleA.Utils.Singletons`)
+
+```csharp
+public class GameManager : PersistentSingleton<GameManager> { }
+
+GameManager.Instance.DoSomething();
+```
+
+- `GenericSingleton<T>` — lazy, auto-creates a GameObject if none exists in the scene.
+- `PersistentSingleton<T>` — same as above, plus `DontDestroyOnLoad`.
+- `RegulatorSingleton<T>` — enforces a single instance across scene loads by destroying duplicates.
 
 ___
 
